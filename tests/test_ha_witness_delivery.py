@@ -374,11 +374,12 @@ def test_add_witness_answers_with_one_command_per_way(auto, host, seed, monkeypa
     assert inst['installer_sha256'] == sha and inst['version'] == _release()
     image = 'ghcr.io/pegaprox/pegaprox-testing:latest'
     assert inst['image'] == image and inst['branch'] == 'Testing' and inst['docker_note'] is None
-    gh = 'https://raw.githubusercontent.com/PegaProx/project-pegaprox/main/packaging/witness/install.sh'
-    mirror = 'https://updates.pegaprox.com/packaging/witness/install.sh'
+    # proxmox-tg: the fork's repository, and no upstream mirror (it would serve upstream's copy)
+    gh = 'https://raw.githubusercontent.com/NeciMNK/proxmox-tg/main/packaging/witness/install.sh'
     here = f"{URLS['a']}/api/ha/witness/installer"
     linux = inst['linux']
-    assert linux.index(gh) < linux.index(mirror) < linux.index(here)
+    assert linux.index(gh) < linux.index(here)
+    assert linux.count(gh) == 1 and 'updates.pegaprox.com' not in linux
     # the code goes to the installer on stdin, by the shell's own printf: never in an argument
     run = f"printf '%s\\n' '{code}' | $([ \"$(id -u)\" -eq 0 ] || echo sudo) sh install.sh --code -"
     checked = f"{{ echo '{sha}  install.sh' | sha256sum -c || {{ echo 'pegaprox-witness: no install.sh"
@@ -459,21 +460,22 @@ with open(out, 'wb') as fh:
 _SUDO = '#!/bin/sh\necho "sudo $*" >> "$FAKE_LOG"\nexec "$@"\n'
 
 
+# proxmox-tg: the fork has no mirror (updates.pegaprox.com serves upstream), GitHub then the leader
 @pytest.mark.parametrize('net, runs, sources', [
     ({'gh': 'stub'}, True, ['gh']),
-    ({'gh': 'fail', 'mirror': 'stub'}, True, ['gh', 'mirror']),
-    ({'gh': 'partial', 'mirror': 'stub'}, True, ['gh', 'mirror']),
-    ({'gh': 'other', 'mirror': 'other', 'here': 'stub'}, True, ['gh', 'mirror', 'here']),
-    ({'gh': 'fail', 'mirror': 'fail', 'here': 'stub'}, True, ['gh', 'mirror', 'here']),
-    ({'gh': 'other', 'mirror': 'fail', 'here': 'other'}, False, ['gh', 'mirror', 'here']),
+    ({'gh': 'fail', 'here': 'stub'}, True, ['gh', 'here']),
+    ({'gh': 'partial', 'here': 'stub'}, True, ['gh', 'here']),
+    ({'gh': 'other', 'here': 'stub'}, True, ['gh', 'here']),
+    ({'gh': 'fail', 'here': 'fail'}, False, ['gh', 'here']),
+    ({'gh': 'other', 'here': 'other'}, False, ['gh', 'here']),
 ])
 def test_the_linux_line_runs_the_installer_only_when_it_matches(tmp_path, monkeypatch, net, runs, sources):
     import pegaprox.api.ha as ha_api
     stub = '#!/bin/sh\nread -r code\necho "installer ran with $* and $code"\n'
     monkeypatch.setattr(ha_api, 'witness_installer', lambda: (stub.encode(), hashlib.sha256(stub.encode()).hexdigest()))
     inst = ha_api.witness_install_commands('https://leader.example:5000', 'pgxwt1_abc-_9')
-    urls = {'gh': ha_api.INSTALLER_SOURCES[0], 'mirror': ha_api.INSTALLER_SOURCES[1],
-            'here': 'https://leader.example:5000/api/ha/witness/installer'}
+    assert len(ha_api.INSTALLER_SOURCES) == 1
+    urls = {'gh': ha_api.INSTALLER_SOURCES[0], 'here': 'https://leader.example:5000/api/ha/witness/installer'}
     fake = tmp_path / 'bin'
     fake.mkdir()
     (fake / 'curl').write_text(_CURL.replace('PYTHON', sys.executable))
@@ -487,7 +489,7 @@ def test_the_linux_line_runs_the_installer_only_when_it_matches(tmp_path, monkey
     out = subprocess.run(['sh', '-c', inst['linux']], env=env, capture_output=True, text=True, timeout=60)
     calls = [json.loads(line) for line in log.read_text().splitlines() if line.startswith('[')]
     assert [next(k for k, u in urls.items() if c[-1] == u) for c in calls] == sources
-    # -k only towards the leader, never towards GitHub or the mirror
+    # -k only towards the leader, never towards GitHub
     assert all(('k' in c[0]) == (c[-1] == urls['here']) for c in calls)
     assert 'SOMETHING ELSE RAN' not in out.stdout
     if runs:
