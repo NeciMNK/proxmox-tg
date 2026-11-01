@@ -68,7 +68,7 @@ def _ceph_panel():
 @pytest.mark.parametrize('key', KEYS)
 def test_every_new_string_is_in_every_language_once(key):
     found = len(re.findall(rf'^\s*{key}:', _read('web', 'src', 'translations.js'), re.M))
-    assert found == 9, f'{key} is in {found} of 9 language blocks - the UI would show the key'
+    assert found == 10, f'{key} is in {found} of 10 language blocks - the UI would show the key'
 
 
 def test_every_new_key_is_used_and_nothing_uses_a_missing_one():
@@ -84,7 +84,7 @@ def test_placeholders_survive_translation():
     tr = _read('web', 'src', 'translations.js')
     for key, phs in PLACEHOLDERS.items():
         values = re.findall(rf'^\s*{key}: "(.*)",$', tr, re.M)
-        assert len(values) == 9 and all(ph in v for v in values for ph in phs), (key, values)
+        assert len(values) == 10 and all(ph in v for v in values for ph in phs), (key, values)
 
 
 def test_no_em_dash_in_what_this_change_added():

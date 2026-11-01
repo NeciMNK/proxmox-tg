@@ -32,7 +32,7 @@ def test_every_new_key_is_in_all_nine_languages():
     new = {k for k in used if k.startswith(KEY_PREFIXES)}
     assert len(new) >= 30
     for key in sorted(new):
-        assert len(re.findall(rf'^\s*{key}:', src, re.M)) == 9, key
+        assert len(re.findall(rf'^\s*{key}:', src, re.M)) == 10, key
 
 
 def test_no_dash_in_what_this_change_added():
