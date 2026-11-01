@@ -8,11 +8,14 @@
 - пользователи и права самого Proxmox VE: «Датацентр → Пользователи Proxmox» (пользователи,
   группы, свои роли, права на пути, просмотр областей входа). Раздел виден только
   администраторам PegaProx; изменения идут в кластер с учётными данными, которые PegaProx
-  хранит для него, и пишутся в журнал аудита.
+  хранит для него, и пишутся в журнал аудита;
+- обновления берутся из этого репозитория, а не из оригинального PegaProx.
 
 Установка в LXC-контейнер Proxmox: [docs/install-lxc-ru.md](docs/install-lxc-ru.md).
 
-Лицензия: AGPL-3.0, как у оригинального проекта (см. `LICENSE` и `NOTICE`). Ниже — оригинальный README PegaProx.
+Лицензия: AGPL-3.0, как у оригинального проекта (см. `LICENSE` и `NOTICE`). Ниже перевод
+оригинального README PegaProx; команды установки и обновления в нём заменены на команды
+для этого форка.
 
 ---
 
@@ -27,16 +30,16 @@
 <h1 align="center">PegaProx</h1>
 
 <p align="center">
-  <strong>Modern Multi-Cluster Management for Proxmox VE & XCP-ng</strong>
+  <strong>Современное управление несколькими кластерами Proxmox VE и XCP-ng</strong>
 </p>
 
 <p align="center">
-  <a href="https://pegaprox.com">Website</a> •
-  <a href="https://docs.pegaprox.com">Documentation</a> •
-  <a href="https://github.com/PegaProx/project-pegaprox/releases">Releases</a> •
-  <a href="https://plugins.pegaprox.com/">Plugins</a> •
-  <a href="https://opencollective.com/pegaprox">Sponsoring</a> •
-  <a href="https://pegaprox.com/sponsors.html">Commercial Support</a>
+  <a href="https://pegaprox.com">Сайт</a> •
+  <a href="https://docs.pegaprox.com">Документация</a> •
+  <a href="https://github.com/PegaProx/project-pegaprox/releases">Релизы</a> •
+  <a href="https://plugins.pegaprox.com/">Плагины</a> •
+  <a href="https://opencollective.com/pegaprox">Спонсорство</a> •
+  <a href="https://pegaprox.com/sponsors.html">Коммерческая поддержка</a>
 </p>
 
 <p align="center">
@@ -50,25 +53,30 @@
     <img src="https://app.aikido.dev/assets/badges/full-light-theme.svg" alt="Aikido Security Audit Report" height="40" />
   </a>
 </p>
+
 ---
 
-## 🚀 What is PegaProx?
+## 🚀 Что такое PegaProx?
 
-PegaProx is a powerful web-based management interface for Proxmox VE and XCP-ng clusters. Manage multiple clusters from a single dashboard with features like live monitoring, VM management, automated tasks, and more.
+PegaProx это веб-интерфейс для управления кластерами Proxmox VE и XCP-ng. Несколько кластеров
+в одной панели: мониторинг в реальном времени, управление VM, автоматические задачи и многое
+другое.
 
 <p align="center">
   <img src="https://pegaprox.com/pictures/pegaprox.png" alt="Dashboard Screenshot" width="800"/>
 </p>
 
-### 🪽 What's in the name?
+### 🪽 Откуда название?
 
-The name **PegaProx** is inspired by *Pegasus*, the winged horse of Greek mythology, combined with *Prox* as a reference to Proxmox VE. Pegasus symbolises speed, freedom and elegant flight - qualities we aspire to bring to multi-cluster hypervisor management.
+Название **PegaProx** составлено из *Пегаса*, крылатого коня из греческой мифологии, и *Prox*
+от Proxmox VE. Пегас символизирует скорость, свободу и лёгкий полёт: этого авторы хотят и для
+управления гипервизорами в нескольких кластерах.
 
-## ❤️ Sponsors
+## ❤️ Спонсоры
 
-> PegaProx is a community-driven open source project that **lives entirely from sponsorships and donations**. Server costs, domains, code-signing certificates and the developer hours behind every release come straight out of our own pockets — and out of the contributions of the wonderful companies and individuals below. If PegaProx saves you time at work, please consider [becoming a sponsor](mailto:sponsor@pegaprox.com) or chipping in on [Open Collective](https://opencollective.com/pegaprox). Every euro keeps the lights on. 💛
+> PegaProx это открытый проект сообщества, который **живёт только на спонсорские деньги и пожертвования**. Серверы, домены, сертификаты для подписи кода и время разработчиков на каждый релиз оплачиваются из своего кармана и из взносов компаний и людей ниже. Если PegaProx экономит вам время на работе, подумайте о том, чтобы [стать спонсором](mailto:sponsor@pegaprox.com) или поддержать проект на [Open Collective](https://opencollective.com/pegaprox). Каждый евро помогает. 💛
 
-### 💎 Platinum
+### 💎 Платина
 
 <p align="center">
   <a href="https://www.netwolk.ch">
@@ -88,7 +96,7 @@ The name **PegaProx** is inspired by *Pegasus*, the winged horse of Greek mythol
   </a>
 </p>
 
-### 🥇 Gold
+### 🥇 Золото
 
 <p align="center">
   <a href="https://socialfurr.com">
@@ -96,7 +104,7 @@ The name **PegaProx** is inspired by *Pegasus*, the winged horse of Greek mythol
   </a>
 </p>
 
-### 🥈 Silver
+### 🥈 Серебро
 
 <p align="center">
   <a href="https://uvensys.de/">
@@ -112,7 +120,7 @@ The name **PegaProx** is inspired by *Pegasus*, the winged horse of Greek mythol
   </a>
 </p>
 
-### 🥉 Bronze
+### 🥉 Бронза
 
 <p align="center">
   <a href="https://idkmanager.com/">
@@ -124,188 +132,158 @@ The name **PegaProx** is inspired by *Pegasus*, the winged horse of Greek mythol
 </p>
 
 <p align="center">
-  <sub><b>Individual supporters:</b>&nbsp; Andreas Huemmer</sub>
+  <sub><b>Частные спонсоры:</b>&nbsp; Andreas Huemmer</sub>
 </p>
 
 <p align="center">
-  <a href="mailto:sponsor@pegaprox.com">Become a Sponsor</a> •
+  <a href="mailto:sponsor@pegaprox.com">Стать спонсором</a> •
   <a href="https://opencollective.com/pegaprox">Open Collective</a> •
-  <a href="https://pegaprox.com/sponsors.html">Commercial Support</a>
+  <a href="https://pegaprox.com/sponsors.html">Коммерческая поддержка</a>
 </p>
 
-## ✨ Features
+## ✨ Возможности
 
-### Multi-Cluster Management
-- 🖥️ **Unified Dashboard** - Manage all your Proxmox clusters from one place
-- 📊 **Live Metrics** - Real-time CPU, RAM, and storage monitoring via SSE
-- 🔄 **Live Migration** - Migrate VMs between nodes with one click
-- ⚖️ **Cross-Cluster Load Balancing** - Distribute workloads across clusters
-- 🛣️ **Transfer Network** - A dedicated network per cluster for the disk data of cross-cluster migrations, replications and Site Recovery runs, off the management network ([docs](docs/transfer-network.md))
-- 🔄 **Cross-Hypervisor Migration** - Migrate VMs between ESXi, Proxmox VE, and XCP-ng 
+### Несколько кластеров
+- 🖥️ **Единая панель** - все кластеры Proxmox в одном месте
+- 📊 **Метрики в реальном времени** - CPU, RAM и хранилища через SSE
+- 🔄 **Живая миграция** - перенос VM между нодами одним щелчком
+- ⚖️ **Балансировка между кластерами** - распределение нагрузки по кластерам
+- 🛣️ **Сеть передачи** - отдельная сеть в каждом кластере для данных дисков при миграциях и репликации между кластерами и запусках Site Recovery, в обход сети управления ([документация](docs/transfer-network.md))
+- 🔄 **Миграция между гипервизорами** - перенос VM между ESXi, Proxmox VE и XCP-ng
 
-### VM & Container Management
-- ▶️ **Quick Actions** - Start, stop, restart VMs and containers
-- ⚙️ **VM Configuration** - Edit CPU, RAM, disks, network, EFI, Secure Boot & more
-- 📸 **Snapshots** - Standard and space-efficient LVM snapshots for shared storage
-- 🔁 **Snapshot Replication** - Storage-agnostic replication for clusters without ZFS
-- 💾 **Backups** - Schedule and manage backups
-- ✅ **Backup Verification** *(Experimental)* - Automated restore → boot → health check → cleanup (ISO 27001, SOC 2, HIPAA compliance)
-- 🖱️ **noVNC / xterm.js Console** - Browser-based console for QEMU and LXC
-- ⚖️ **Load Balancing** - Automatic VM distribution across nodes
-- 🔁 **High Availability** - Restart the guests of a failed node elsewhere, with fencing, a self-fence agent and only guests whose volumes are on shared storage
-- 📍 **Affinity Rules** - Keep VMs together or apart on hosts (QEMU + LXC)
+### VM и контейнеры
+- ▶️ **Быстрые действия** - запуск, остановка, перезагрузка VM и контейнеров
+- ⚙️ **Настройка VM** - CPU, RAM, диски, сеть, EFI, Secure Boot и другое
+- 📸 **Снапшоты** - обычные и экономные снапшоты LVM для общих хранилищ
+- 🔁 **Репликация снапшотами** - репликация на любом хранилище, для кластеров без ZFS
+- 💾 **Бэкапы** - расписание и управление бэкапами
+- ✅ **Проверка бэкапов** *(экспериментально)* - автоматически: восстановление → загрузка → проверка состояния → очистка (для ISO 27001, SOC 2, HIPAA)
+- 🖱️ **Консоль noVNC / xterm.js** - консоль QEMU и LXC в браузере
+- ⚖️ **Балансировка** - автоматическое распределение VM по нодам
+- 🔁 **Высокая доступность** - перезапуск гостей упавшей ноды на других нодах, с фенсингом, агентом самоизоляции и только для гостей, чьи тома лежат на общем хранилище
+- 📍 **Правила размещения** - держать VM вместе или раздельно (QEMU и LXC)
 
-### XCP-ng Integration (Tech Preview)
-- 🟢 **XCP-ng Pool Support** - Connect XCP-ng / Xen hypervisor pools alongside Proxmox clusters
-- ▶️ **VM Power Actions** - Start, stop, shutdown, reboot, suspend/resume
-- 🖥️ **VNC Console** - Browser-based remote console via XAPI
-- 💽 **Disk & Network Management** - Add, resize, remove disks and NICs
-- 🔧 **Maintenance Mode** - Enter/exit with automatic VM evacuation
+### Интеграция с XCP-ng (предварительная версия)
+- 🟢 **Пулы XCP-ng** - пулы XCP-ng / Xen рядом с кластерами Proxmox
+- ▶️ **Управление питанием VM** - запуск, остановка, выключение, перезагрузка, приостановка и возобновление
+- 🖥️ **Консоль VNC** - удалённая консоль в браузере через XAPI
+- 💽 **Диски и сеть** - добавление, изменение размера, удаление дисков и сетевых карт
+- 🔧 **Режим обслуживания** - вход и выход с автоматической эвакуацией VM
 
-### ESXi Migration
-- 🔀 **ESXi Import Wizard** - Migrate VMs from ESXi hosts to Proxmox
-- ⚡ **Near-Zero Downtime** - Transfer running VMs with minimal interruption (max. 1 VM recommended)
-- 🔌 **Offline Migration** - Shut down and transfer for maximum reliability
-- 🔑 **SSH Required** - ESXi host must have SSH enabled
+### Миграция с ESXi
+- 🔀 **Мастер импорта ESXi** - перенос VM с хостов ESXi в Proxmox
+- ⚡ **Почти без простоя** - перенос работающих VM с минимальным перерывом (рекомендуется не больше 1 VM за раз)
+- 🔌 **Офлайн-миграция** - выключение и перенос для максимальной надёжности
+- 🔑 **Нужен SSH** - на хосте ESXi должен быть включён SSH
 
-### Security & Access Control
-- 👥 **Multi-User Support** - Role-based access control (Admin, Operator, Viewer) + custom roles
-- 🛠️ **API Token Management** - Create, list, and revoke Bearer tokens (scoped per role)
-- 🔐 **2FA Authentication** - TOTP-based two-factor authentication (with force option)
-- 🔑 **WebAuthn / FIDO2** - Hardware-key login (YubiKey, Nitrokey, Touch ID, Windows Hello) - passwordless or as 2FA factor
-- 🏛️ **LDAP / OIDC** - Active Directory, OpenLDAP, Entra ID, Keycloak, Google Workspace, Authentik (with PKCE)
-- 🛡️ **VM-Level ACLs** - Fine-grained permissions per VM
-- 🏢 **Multi-Tenancy** - Isolate clusters for different customers
-- 🚫 **IP Whitelisting / Blacklisting** - Restrict access by IP or CIDR range
-- 🔒 **Full-DB Encryption** - SQLCipher (AES-256-CBC + HMAC-SHA512, format v4) wraps the entire database at rest on Linux x86_64; sensitive fields stay individually Fernet-encrypted everywhere else. Multi-tier master-key loader resolves from env / systemd LoadCredentialEncrypted / `/etc/pegaprox/secret.key`, so a `config/` backup never carries the key alongside the data. Auto-migrates plain DBs on first boot post-update.
-- 🔍 **CVE Scanner** - Per-node package vulnerability scanning via debsecan
-- 🛡️ **CIS Hardening** - One-click security audit and hardening against CIS benchmarks
-- 🧾 **HMAC-Signed Audit Log** - Tamper-evident integrity verification on every entry
+### Безопасность и доступ
+- 👥 **Много пользователей** - роли (администратор, оператор, наблюдатель) и свои роли
+- 🛠️ **API-токены** - создание, список и отзыв Bearer-токенов (с ограничением по роли)
+- 🔐 **Двухфакторная аутентификация** - TOTP (можно сделать обязательной)
+- 🔑 **WebAuthn / FIDO2** - вход по аппаратному ключу (YubiKey, Nitrokey, Touch ID, Windows Hello), без пароля или как второй фактор
+- 🏛️ **LDAP / OIDC** - Active Directory, OpenLDAP, Entra ID, Keycloak, Google Workspace, Authentik (с PKCE)
+- 🛡️ **Права на уровне VM** - детальные права на каждую VM
+- 🏢 **Мультиарендность** - изоляция кластеров разных клиентов
+- 🚫 **Белые и чёрные списки IP** - ограничение доступа по IP или подсети CIDR
+- 🔒 **Шифрование всей базы** - SQLCipher (AES-256-CBC + HMAC-SHA512, формат v4) шифрует всю базу на диске на Linux x86_64; на других платформах важные поля шифруются по отдельности (Fernet). Ключ ищется в переменной окружения, systemd LoadCredentialEncrypted или `/etc/pegaprox/secret.key`, поэтому бэкап `config/` не содержит ключа рядом с данными. Незашифрованная база шифруется автоматически при первом запуске после обновления.
+- 🔍 **Сканер CVE** - поиск уязвимых пакетов на каждой ноде через debsecan
+- 🛡️ **Укрепление по CIS** - аудит и укрепление по CIS benchmarks одним щелчком
+- 🧾 **Журнал аудита с подписью HMAC** - каждая запись проверяется на подделку
 
-### Automation & Monitoring
-- ⏰ **Scheduled Tasks** - Automate VM actions (start, stop, snapshot, backup)
-- 📸 **Snapshot Schedules** - Tag-based or VMID-list snapshot policies with retention pruning (hourly / daily / weekly + “keep last N” + “keep N days”)
-- 🔄 **Rolling Node Updates** - Update cluster nodes one by one with automatic evacuation
-- 🚨 **Alerts** - Get notified on high CPU, memory, or disk usage
-- 📜 **Audit Logging** - Track all user actions with IP addresses
-- 🔎 **Audit Search** - Full-text + date-range + severity + IP filter, paginated, CSV export
-- 🛰️ **SIEM Forwarder** - Stream audit events to Syslog (UDP/TCP RFC 5424), Splunk HEC, Elasticsearch, Loki, or generic webhooks. VAPID-style per-target TLS verification.
-- 🔧 **Custom Scripts** - Run scripts across nodes
-- 💿 **Ceph Management** - Monitor and manage Ceph storage pools, RBD mirroring
-- 🔐 **ACME / Let's Encrypt** - Automatic SSL certificate renewal with HTTP-01 challenge (+ custom ACME CAs)
-- 📋 **Integrated Syslog Server** - Receive and view syslog messages (UDP/TCP) with filtering, search, and severity-based coloring
-- 🧬 **Config Drift Detection** - Nightly snapshot of cluster config (VM configs, storage.cfg, network, datacenter options) - alerts on any unauthorized change vs the admin-set baseline. Pairs with the Compliance Dashboard.
+### Автоматизация и мониторинг
+- ⏰ **Задачи по расписанию** - автоматические действия с VM (запуск, остановка, снапшот, бэкап)
+- 📸 **Расписания снапшотов** - политики по тегам или списку VMID с очисткой старых (ежечасно / ежедневно / еженедельно + «хранить последние N» + «хранить N дней»)
+- 🔄 **Поочерёдное обновление нод** - ноды обновляются по одной с автоматической эвакуацией
+- 🚨 **Оповещения** - о высокой загрузке CPU, памяти или диска
+- 📜 **Журнал аудита** - все действия пользователей с IP-адресами
+- 🔎 **Поиск по аудиту** - полнотекстовый поиск, фильтры по датам, важности и IP, постраничный вывод, экспорт в CSV
+- 🛰️ **Пересылка в SIEM** - события аудита в Syslog (UDP/TCP RFC 5424), Splunk HEC, Elasticsearch, Loki или вебхуки, с проверкой TLS для каждого получателя
+- 🔧 **Свои скрипты** - запуск скриптов на нодах
+- 💿 **Управление Ceph** - мониторинг и управление пулами Ceph, зеркалирование RBD
+- 🔐 **ACME / Let's Encrypt** - автоматическое продление SSL-сертификатов через HTTP-01 (и свои ACME CA)
+- 📋 **Встроенный syslog-сервер** - приём и просмотр сообщений syslog (UDP/TCP) с фильтрами, поиском и цветами по важности
+- 🧬 **Контроль расхождений конфигурации** - ночной снимок конфигурации кластера (конфиги VM, storage.cfg, сеть, параметры датацентра) и оповещение о любом изменении относительно базовой линии администратора. Работает вместе с панелью соответствия.
 
-### Reports & Analytics
-- 💰 **Cost Dashboard / Chargeback** - €/VM/Month from real metrics (CPU-h × node tariff + RAM-GB-h + Storage-GB-month). Currency-configurable, per-cluster rates, top-spender table, by-node breakdown. CSV + PDF export.
-- ⚡ **Power & Carbon Tracking** - Estimated kWh + €/Month + kg CO₂/Month per VM, based on metrics history × node-power profile × PUE × grid CO₂ intensity. Defaults for DE/EU; admin-tunable for any hardware/grid. CSV + PDF export.
-- 🧠 **Insights** - Right-sizing recommendations (oversized / undersized CPU + RAM, idle VMs) and capacity forecasts (linear regression + ETA to threshold) over 30 days of history. PDF export.
-- 🌐 **Network Topology Visualization** - Interactive SVG graph: Cluster → Nodes → Bridges/Bonds/SDN VNets → VMs. Click to highlight connections.
-- 📊 **Compliance Dashboard** - Read-only BSI Grundschutz / ISO 27001 / NIS2 / SOC 2 mapping per cluster, hardening score, exportable PDF. Visible to ops/auditors without admin rights.
-- 🛡️ **CVE Reporting** - Per-cluster severity counts + per-package detail + historical view of when each CVE first appeared.
+### Отчёты и аналитика
+- 💰 **Затраты / распределение расходов** - €/VM/месяц по реальным метрикам (CPU-часы × тариф ноды + ГБ-часы RAM + ГБ-месяцы хранилища). Валюта и тарифы по кластерам настраиваются, таблица самых затратных VM, разбивка по нодам. Экспорт в CSV и PDF.
+- ⚡ **Энергия и углерод** - оценка кВт·ч, €/месяц и кг CO₂/месяц на VM по истории метрик × профилю питания ноды × PUE × углеродной интенсивности сети. Значения по умолчанию для Германии и ЕС, настраиваются под любое железо и сеть. Экспорт в CSV и PDF.
+- 🧠 **Рекомендации** - подбор размера (лишние или недостающие CPU и RAM, простаивающие VM) и прогноз ёмкости (линейная регрессия и срок до порога) по 30 дням истории. Экспорт в PDF.
+- 🌐 **Топология сети** - интерактивный SVG-граф: кластер → ноды → мосты / бонды / SDN VNet → VM. Щелчок подсвечивает связи.
+- 📊 **Панель соответствия** - соответствие BSI Grundschutz / ISO 27001 / NIS2 / SOC 2 по каждому кластеру, оценка укреплённости, экспорт в PDF. Только чтение, доступна операторам и аудиторам без прав администратора.
+- 🛡️ **Отчёты по CVE** - число уязвимостей по важности для кластера, подробности по пакетам и история появления каждой CVE.
 
-### Operations & Deployment
-- ☁️ **Cloud-Init Template Library** - Curated catalog of the supported Ubuntu LTS, Debian, AlmaLinux, Rocky Linux, Fedora and Alpine cloud images (a weekly CI job checks every image URL and flags releases past their end of life) plus admin-defined custom templates. One-click deploy to any cluster (download → import → cloudinit drive → convert to template).
-- 🚑 **Site Recovery** - Configure DR plans (boot order, dependencies, replication mappings) and execute controlled failover with audit trail.
-- 📦 **Backup SLA Tracking** - SLA dashboard per cluster + datastore: last-backup age vs configured RPO, integrated with the Alert pipeline.
-- 🔁 **ZFS / Cross-Cluster Replication** - Native PVE replication monitor + cross-cluster replication for clusters without shared storage.
-- 🪽 **PegaProx High Availability** - Pair up to 4 PegaProx instances: standbys keep a copy of the configuration, show a live view and pass changes on to the leader; failover is a confirmed, manual promote, or (beta, switched on per group) automatic by majority vote, with an optional witness as the third vote
-- 🧩 **Automated PVE Installations** - Serve answer files for the Proxmox VE auto-installer from profiles (guided setup or editor) and follow every installation run
-- 🛠️ **V2P / ESXi Migration** - Pyvmomi + SSHFS-based, with VirtIO driver pre-staging via MSI bulk-install (Windows guests).
+### Эксплуатация и развёртывание
+- ☁️ **Библиотека шаблонов Cloud-Init** - подобранный каталог поддерживаемых облачных образов Ubuntu LTS, Debian, AlmaLinux, Rocky Linux, Fedora и Alpine (еженедельная проверка в CI находит битые ссылки и релизы с истёкшей поддержкой) и свои шаблоны администратора. Развёртывание в любой кластер одним щелчком (скачивание → импорт → диск cloudinit → шаблон).
+- 🚑 **Site Recovery** - планы аварийного восстановления (порядок загрузки, зависимости, соответствие реплик) и управляемое переключение с журналом аудита.
+- 📦 **Контроль SLA бэкапов** - панель SLA по кластерам и хранилищам: возраст последнего бэкапа против заданного RPO, с оповещениями.
+- 🔁 **Репликация ZFS и между кластерами** - мониторинг встроенной репликации PVE и репликация между кластерами без общего хранилища.
+- 🪽 **Высокая доступность самого PegaProx** - до 4 экземпляров PegaProx в группе: резервные хранят копию конфигурации, показывают живой вид и передают изменения лидеру; переключение вручную с подтверждением или (бета, включается для группы) автоматически по большинству голосов, с необязательным свидетелем как третьим голосом
+- 🧩 **Автоматическая установка PVE** - файлы ответов для автоустановщика Proxmox VE из профилей (мастер или редактор) и отслеживание каждой установки
+- 🛠️ **Миграция V2P / ESXi** - на основе Pyvmomi и SSHFS, с заранее подготовленными драйверами VirtIO через пакетную установку MSI (для Windows).
 
-### Notifications
-- 📢 **Webhook Channels** - Slack, Discord, Microsoft Teams, ntfy, generic JSON webhooks (multi-channel, per-alert routing)
-- 🔔 **Web Push Notifications** - Browser push via VAPID, “wake-up” pattern (no payload leaks to push provider). Inbox view in the topbar bell with unread badge.
-- 📲 **PWA / Installable App** - Service Worker shell-cache, offline boot, install prompt, theme-color matching layout.
+### Уведомления
+- 📢 **Каналы вебхуков** - Slack, Discord, Microsoft Teams, ntfy, обычные JSON-вебхуки (несколько каналов, маршрутизация по оповещениям)
+- 🔔 **Push-уведомления в браузере** - через VAPID, по схеме «разбудить» (данные не уходят push-провайдеру). Входящие в колокольчике сверху со счётчиком непрочитанных.
+- 📲 **PWA / устанавливаемое приложение** - кэш оболочки в Service Worker, запуск без сети, предложение установки, цвет темы под оформление.
 
-### Plugins
-- 🌐 **Client Portal** - Self-service portal for hosting customers with VM power actions, noVNC console, snapshots, ISO mount, snapshot policies (read-only), 2FA, and password management
-- 📊 **Public Status Page** - Cluster health dashboard for monitoring screens with URL-based auth key (no login required)
-- 🔔 **Notifications Plugin** - ntfy + Apprise integration for unified channel routing
-- 🐳 **Docker Swarm Manager** *(Community)* - Manage Swarm services from the same UI
-- 🗄️ **TrueNAS SCALE Manager** *(Community)* - Monitor and administer TrueNAS SCALE (pools, datasets, snapshots, SMB/NFS shares, replication, apps/VMs, services, data-protection posture, telemetry) over JSON-RPC 2.0
-- 🔌 **Plugin Config Editor** - Edit plugin configuration directly from the UI
+### Плагины
+- 🌐 **Клиентский портал** - самообслуживание для клиентов хостинга: питание VM, консоль noVNC, снапшоты, подключение ISO, политики снапшотов (только чтение), 2FA и смена пароля
+- 📊 **Публичная страница статуса** - состояние кластеров для экранов мониторинга с ключом в URL (без входа)
+- 🔔 **Плагин уведомлений** - интеграция ntfy и Apprise для единой маршрутизации каналов
+- 🐳 **Docker Swarm Manager** *(от сообщества)* - управление сервисами Swarm в том же интерфейсе
+- 🗄️ **TrueNAS SCALE Manager** *(от сообщества)* - мониторинг и администрирование TrueNAS SCALE (пулы, датасеты, снапшоты, шары SMB/NFS, репликация, приложения и VM, службы, защита данных, телеметрия) через JSON-RPC 2.0
+- 🔌 **Редактор настроек плагинов** - настройки плагинов прямо из интерфейса
 
-### Advanced Features
-- 🌐 **Offline Mode** - Works without internet (local assets, air-gap mode disables external CVE/sponsor lookups for VS-NfD / classified networks)
-- 🎨 **Themes** - 17 themes including Dark/Light, Proxmox, Corporate (light/dark), Dracula, Nord, Monokai, Solarized, Cyberpunk, etc.
-- 🏢 **Corporate Layout** - Tree-based sidebar with dense tables
-- 🌍 **Multi-Language** - English, German, French, Spanish, Portuguese, Polish, Korean, Italian, Simplified Chinese
-- 📱 **Responsive + PWA** - Works on desktop and mobile, installable as native-feeling app
-- 📦 **PBS Integration** - Proxmox Backup Server management with backup verification
-- 🔭 **Prometheus Exporter** - Scrape `/api/metrics` with a bearer token (an admin's or one with `metrics.view`) for cluster, node, guest, storage, replication and backup-age metrics
+### Дополнительно
+- 🌐 **Офлайн-режим** - работает без интернета (локальные ресурсы; режим air-gap отключает внешние запросы CVE и спонсоров для закрытых сетей)
+- 🎨 **Темы** - 17 тем: тёмная и светлая, Proxmox, Corporate (светлая и тёмная), Dracula, Nord, Monokai, Solarized, Cyberpunk и другие
+- 🏢 **Корпоративный вид** - боковое дерево и плотные таблицы
+- 🌍 **Много языков** - английский, немецкий, французский, испанский, португальский, польский, корейский, итальянский, упрощённый китайский, а в этом форке и русский
+- 📱 **Адаптивность и PWA** - работает на компьютере и телефоне, устанавливается как приложение
+- 📦 **Интеграция с PBS** - управление Proxmox Backup Server и проверка бэкапов
+- 🔭 **Экспорт для Prometheus** - `/api/metrics` с Bearer-токеном (администратора или с правом `metrics.view`): метрики кластеров, нод, гостей, хранилищ, репликации и возраста бэкапов
 
-## 📋 Requirements
+## 📋 Требования
 
-- Python 3.10 to 3.13 (3.12 recommended)
-- Proxmox VE 8.0+ or 9.0+ and/or XCP-ng 8.2+
-- Modern web browser (Chrome, Firefox, Edge, Safari)
+- Python от 3.10 до 3.13 (рекомендуется 3.12)
+- Proxmox VE 8.0+ или 9.0+ и/или XCP-ng 8.2+
+- Современный браузер (Chrome, Firefox, Edge, Safari)
 
-## ⚡ Quick Start / Installation
+## ⚡ Быстрый старт / установка
 
-### Automated Installation
-This installation method pulls the deployment script directly from the current HEAD of the main branch. This means you will always receive the latest available version, including the most recent features and improvements. However, because it is not tied to a specific release, it may also contain unreleased changes or bugs that have not yet been fully tested. If you prefer a stable and tested version, consider installing PegaProx from a tagged release instead.
+Подробная пошаговая инструкция для LXC-контейнера в Proxmox: [docs/install-lxc-ru.md](docs/install-lxc-ru.md).
+
+### Установка из клона (рекомендуется)
+
+`deploy.sh`, запущенный из клона, ставит файлы этого форка: зависимости, пользователя
+`pegaprox`, venv, ключ шифрования и службу `pegaprox`.
 
 ```bash
-curl -O https://raw.githubusercontent.com/PegaProx/project-pegaprox/refs/heads/main/deploy.sh
-chmod +x deploy.sh
-sudo ./deploy.sh
+git clone https://github.com/NeciMNK/proxmox-tg.git /opt/proxmox-tg-src
+cd /opt/proxmox-tg-src
+sudo bash deploy.sh --port=5000 --no-interactive
 ```
 
-### Debian Repository
-This installation method uses the official APT repository provided by gyptazy. The repository and its associated build and packaging pipeline are fully hosted and maintained by <a href="https://github.com/gyptazy">gyptazy</a>, where PegaProx releases are automatically built and published as Debian packages. Unlike the automated installation script, which pulls the latest code directly from the repository branch, the APT repository distributes packaged and versioned releases. This generally provides a more stable and predictable installation, making it the recommended approach for production environments.
+Пока репозиторий закрытый, `git clone` попросит логин и токен GitHub с правом чтения.
+
+### Ручной запуск из исходников
+
+Для разработки и отладки:
+
 ```bash
-curl https://git.gyptazy.com/api/packages/gyptazy/debian/repository.key -o /etc/apt/keyrings/gyptazy.asc
-echo "deb [signed-by=/etc/apt/keyrings/gyptazy.asc] https://packages.gyptazy.com/api/packages/gyptazy/debian trixie main" | sudo tee -a /etc/apt/sources.list.d/gyptazy.list
-apt-get update
-
-apt-get -y install pegaprox
-```
-
-## Installation from Source
-This installation methods run PegaProx directly from the source code repository. It is primarily intended for development, testing, or advanced users who want full control over the codebase or want to modify and extend the project.
-
-By default, cloning the repository will pull the latest state of the main branch, which contains the most recent changes and features. While this ensures you always have the newest code available, it may also include in-progress changes that are not part of an official release yet.
-If you prefer a more stable version, you can optionally checkout a specific release tag from the repository before installing dependencies and starting the application. This allows you to run the exact code corresponding to an official release while still using the source-based installation method.
-
-Running PegaProx from source can be useful for debugging, contributing to the project, or integrating custom functionality, since you have direct access to the entire codebase and can easily update it using standard Git workflows.
-
-### Manual Installation
-```bash
-git clone https://github.com/PegaProx/project-pegaprox.git
-cd project-pegaprox
+git clone https://github.com/NeciMNK/proxmox-tg.git
+cd proxmox-tg
 pip install -r requirements.txt
 python3 pegaprox_multi_cluster.py
 ```
 
 ### Docker
-```bash
-docker compose up -d
-```
 
-Or without Compose:
-```bash
-docker run -d --name pegaprox \
-  -p 5000:5000 -p 5001:5001 -p 5002:5002 \
-  -v pegaprox-config:/app/config \
-  -v pegaprox-logs:/app/logs \
-  --restart unless-stopped \
-  ghcr.io/pegaprox/pegaprox:latest
-```
+Локальная сборка из этого форка:
 
-The same image is on Docker Hub as [`pegaprox/pegaprox`](https://hub.docker.com/r/pegaprox/pegaprox), with the identical digest, so `pegaprox/pegaprox:latest` works just as well. Other PegaProx images on Docker Hub are not ours and may be outdated.
-
-From 1.4.1 on, the Docker images and the VM/LXC appliance images carry a signed build provenance attestation, so you can check that an image was built by our release workflow from this repository:
 ```bash
-gh attestation verify oci://ghcr.io/pegaprox/pegaprox:<version> -R PegaProx/project-pegaprox
-gh attestation verify oci://docker.io/pegaprox/pegaprox:<version> -R PegaProx/project-pegaprox
-gh attestation verify pegaprox-v<version>-vm-amd64.qcow2 -R PegaProx/project-pegaprox
-```
-
-For local builds:
-```bash
-git clone https://github.com/PegaProx/project-pegaprox.git
-cd project-pegaprox
+git clone https://github.com/NeciMNK/proxmox-tg.git
+cd proxmox-tg
 docker build -t pegaprox .
 docker run -d --name pegaprox \
   -p 5000:5000 -p 5001:5001 -p 5002:5002 \
@@ -315,108 +293,135 @@ docker run -d --name pegaprox \
   pegaprox
 ```
 
-### Debian Package (.deb build)
+Готовые образы `ghcr.io/pegaprox/pegaprox` и `pegaprox/pegaprox` на Docker Hub, пакет из
+APT-репозитория gyptazy и `docker compose up -d` с файлом из репозитория ставят
+**оригинальный** PegaProx, без перевода, бота и раздела пользователей Proxmox. Образы
+оригинала, начиная с 1.4.1, подписаны (build provenance), проверка:
+
 ```bash
-git clone https://github.com/PegaProx/project-pegaprox.git
-cd project-pegaprox
+gh attestation verify oci://ghcr.io/pegaprox/pegaprox:<version> -R PegaProx/project-pegaprox
+```
+
+### Пакет Debian (сборка .deb)
+
+```bash
+git clone https://github.com/NeciMNK/proxmox-tg.git
+cd proxmox-tg
 
 dpkg-buildpackage -us -uc
 sudo dpkg -i ../pegaprox_*.deb
 ```
 
-## 🔄 Updating
+## 🔄 Обновление
 
-**Option 1: Update Script (Recommended)**
+Обновления берутся из этого репозитория (`NeciMNK/proxmox-tg`), оригинальный PegaProx и его
+зеркало отключены: они затёрли бы доработки форка.
+
+**Вариант 1: из клона** (работает и с закрытым репозиторием)
+
 ```bash
-cd /opt/PegaProx
-curl -O https://raw.githubusercontent.com/PegaProx/project-pegaprox/refs/heads/main/update.sh
-chmod +x update.sh
-sudo ./update.sh
+cd /opt/proxmox-tg-src
+git pull
+sudo bash deploy.sh --port=5000 --no-interactive
 ```
 
-**Option 2: Web UI**
+**Вариант 2: скрипт обновления или веб-интерфейс**
 
-Go to Settings → Updates and click "Check for Updates".
-
-## 🔧 Configuration
-
-After starting PegaProx, open your browser and navigate to:
-
-```
-https://your-server-ip:5000
+```bash
+sudo bash /opt/PegaProx/update.sh
 ```
 
-A fresh install has no default credentials:
+или в настройках PegaProx кнопка «Проверить обновления». Работает, когда репозиторий
+публичный и в новой версии поднят номер `version` в `version.json` и `PEGAPROX_VERSION`
+в `pegaprox/constants.py`.
 
-1. **Setup wizard**: The first visit opens the setup wizard, where you create the first admin account
-2. **Add Cluster**: Go to Settings → Clusters → Add your Proxmox credentials
-3. **Done!** Start managing your VMs
+## 🔧 Настройка
 
-## 📁 Directory Structure
+После запуска откройте в браузере:
+
+```
+https://адрес-сервера:5000
+```
+
+Паролей по умолчанию нет:
+
+1. **Мастер настройки**: при первом входе открывается мастер, где создаётся первый администратор
+2. **Добавьте кластер**: кнопка «Добавить кластер», адрес ноды и учётные данные Proxmox
+3. **Готово!** Можно управлять VM
+
+## 📁 Структура каталогов
 
 ```
 /opt/PegaProx/
-├── pegaprox_multi_cluster.py   # Entry point
-├── pegaprox/                   # Application package
-│   ├── app.py                  # Flask app factory
-│   ├── constants.py            # Configuration constants
-│   ├── globals.py              # Shared state
-│   ├── api/                    # REST API blueprints
-│   ├── core/                   # Business logic (manager, db, cache)
-│   ├── background/             # Background tasks (scheduler, alerts)
-│   ├── utils/                  # Utilities (auth, RBAC, LDAP, OIDC)
-│   └── models/                 # Data models
+├── pegaprox_multi_cluster.py   # точка входа
+├── pegaprox/                   # пакет приложения
+│   ├── app.py                  # фабрика приложения Flask
+│   ├── constants.py            # константы конфигурации
+│   ├── globals.py              # общее состояние
+│   ├── api/                    # REST API (blueprints)
+│   ├── core/                   # бизнес-логика (менеджер, БД, кэш)
+│   ├── background/             # фоновые задачи (планировщик, оповещения)
+│   ├── utils/                  # утилиты (аутентификация, RBAC, LDAP, OIDC)
+│   └── models/                 # модели данных
 ├── web/
-│   ├── index.html              # Compiled frontend
-│   └── src/                    # Frontend source (JSX)
+│   ├── index.html              # собранный фронтенд
+│   └── src/                    # исходники фронтенда (JSX)
 ├── config/
-│   └── pegaprox.db             # SQLite database - fully encrypted at rest via SQLCipher (Linux x86_64); plain SQLite + Fernet-encrypted fields elsewhere
-├── static/                     # JS/CSS libraries (offline mode)
-├── logs/                       # Application logs
-└── update.sh                   # Update script
+│   └── pegaprox.db             # база SQLite: целиком зашифрована SQLCipher (Linux x86_64); на других платформах обычный SQLite и зашифрованные Fernet поля
+├── static/                     # JS/CSS-библиотеки (офлайн-режим)
+├── logs/                       # журналы приложения
+└── update.sh                   # скрипт обновления
 ```
 
-## 🔒 Security
+Telegram-бот ставится отдельно в `/opt/proxmox-tg-bot`, см. [tgbot/README.md](tgbot/README.md).
 
-- **Database at rest** → SQLCipher (AES-256-CBC + HMAC-SHA512, SQLCipher format v4) on Linux x86_64. Plain SQLite + per-field Fernet on other platforms (ARM / macOS / Windows). See [`docs/SECURITY.md`](docs/SECURITY.md) for the threat model and recovery story.
-- **Master key custody** → Multi-tier loader: `PEGAPROX_DB_KEY` env / systemd `LoadCredentialEncrypted` (TPM2-bound) / `/etc/pegaprox/secret.key` / `~/.config/pegaprox/secret.key` / legacy `config/`. Default chmod 0600, files with loose permissions are skipped rather than used silently.
-- **Sensitive fields** (Cluster PW, SSH keys, TOTP secrets, OIDC client secrets, LDAP bind) → Fernet (AES-256-GCM equivalent), works even when full-DB encryption isn't available.
-- **API Tokens** → SHA-256 hash (constant-time compare).
-- **Passwords** → Argon2id (3 iter, 64 MB memory cost).
-- HTTPS required for production.
-- Session tokens expire after inactivity; optional strict-IP binding.
-- Per-IP rate limiting on login + every authenticated endpoint.
-- Input sanitization, CSRF Origin matching, RBAC enforced server-side on every route.
-- Auto-encryption on first boot - operators can opt out with `PEGAPROX_DISABLE_AUTO_ENCRYPT=1` if they want to take their own pre-encryption backup first.
+## 🔒 Безопасность
 
-## 📖 Documentation
+- **База на диске** → SQLCipher (AES-256-CBC + HMAC-SHA512, формат SQLCipher v4) на Linux x86_64. На других платформах (ARM / macOS / Windows) обычный SQLite и Fernet для отдельных полей. Модель угроз и восстановление: [`docs/SECURITY.md`](docs/SECURITY.md).
+- **Хранение главного ключа** → по порядку: переменная `PEGAPROX_DB_KEY` / systemd `LoadCredentialEncrypted` (привязка к TPM2) / `/etc/pegaprox/secret.key` / `~/.config/pegaprox/secret.key` / старое место в `config/`. Права по умолчанию 0600; файлы со слишком открытыми правами пропускаются, а не используются молча.
+- **Важные поля** (пароли кластеров, SSH-ключи, секреты TOTP, секреты клиентов OIDC, учётная запись LDAP) → Fernet; работает, даже когда шифрование всей базы недоступно.
+- **API-токены** → хэш SHA-256 (сравнение за постоянное время).
+- **Пароли** → Argon2id (3 итерации, 64 МБ памяти).
+- В рабочей среде обязателен HTTPS.
+- Сессии истекают после простоя; можно жёстко привязать сессию к IP.
+- Ограничение частоты запросов по IP на вход и на каждый запрос с аутентификацией.
+- Проверка входных данных, сверка Origin против CSRF, RBAC на сервере для каждого маршрута.
+- Автоматическое шифрование при первом запуске; отключается через `PEGAPROX_DISABLE_AUTO_ENCRYPT=1`, если сначала нужно сделать свой бэкап.
 
-Full documentation is available at **[docs.pegaprox.com](https://docs.pegaprox.com)**
+## 📖 Документация
 
-## 📜 License
+Полная документация оригинального PegaProx (на английском): **[docs.pegaprox.com](https://docs.pegaprox.com)**
 
-This project is licensed under the AGPL-3.0 License - see the [LICENSE](LICENSE) file for details.
+## 📜 Лицензия
 
-**Attribution (AGPL §7b):** Under Section 7(b) of the AGPL, the **"Powered by PegaProx"** attribution shown in the client portal is a *required* author attribution and must be preserved in every copy and modified/derivative version — see the [NOTICE](NOTICE) file. Note also that AGPL §13 requires anyone hosting a **modified** version for network users to publish that version's complete source to those users. PegaProx is AGPL-3.0 only — the attribution applies to everyone, without exception.
+Проект распространяется по лицензии AGPL-3.0, подробности в файле [LICENSE](LICENSE).
 
-## 💬 Support
+**Указание авторства (AGPL §7b):** по разделу 7(b) AGPL надпись **«Powered by PegaProx»** в клиентском портале является *обязательным* указанием авторства и должна сохраняться во всех копиях и изменённых или производных версиях, см. файл [NOTICE](NOTICE). Кроме того, AGPL §13 требует, чтобы тот, кто предоставляет **изменённую** версию пользователям по сети, опубликовал для них полный исходный код этой версии. PegaProx распространяется только по AGPL-3.0, указание авторства обязательно для всех без исключений.
 
-- 💬 Discord: [Community Server](https://discord.gg/AJPf3H62QW)
-- 📧 Email: support@pegaprox.com
-- 🐛 Issues: [GitHub Issues](https://github.com/PegaProx/project-pegaprox/issues)
+## 💬 Поддержка
 
-## 🤖 Development Tools
+Вопросы по доработкам этого форка (перевод, Telegram-бот, пользователи Proxmox, обновления):
+[Issues этого репозитория](https://github.com/NeciMNK/proxmox-tg/issues).
 
-Like most modern dev teams, we use AI-assisted tooling (code completion, docs generation, review automation, security audits). All architecture decisions, implementation, and testing are handled by our three-person team. - see [IBM](https://www.ibm.com/solutions/ai-coding) , [IBM Case Studies](https://www.ibm.com/case-studies/ibm-software-team) , [MIT Tech Review](https://www.technologyreview.com/2025/12/15/1128352/rise-of-ai-coding-developers-2026/)
+Оригинальный PegaProx:
+- 💬 Discord: [сервер сообщества](https://discord.gg/AJPf3H62QW)
+- 📧 Почта: support@pegaprox.com
+- 🐛 Ошибки: [GitHub Issues](https://github.com/PegaProx/project-pegaprox/issues)
 
-AI-driven security auditing is an industry-standard practice - see [Hacker News](https://thehackernews.com/2026/02/claude-opus-46-finds-500-high-severity.html), [IBM Research](https://www.ibm.com/think/insights/chatgpt-4-exploits-87-percent-one-day-vulnerabilities).
+## 🤖 Инструменты разработки
 
-## ⭐ Star History
+Как и большинство современных команд, авторы PegaProx используют инструменты на основе ИИ (автодополнение кода, генерация документации, автоматизация ревью, аудит безопасности). Архитектурные решения, реализацию и тестирование выполняет команда из трёх человек. См. [IBM](https://www.ibm.com/solutions/ai-coding), [IBM Case Studies](https://www.ibm.com/case-studies/ibm-software-team), [MIT Tech Review](https://www.technologyreview.com/2025/12/15/1128352/rise-of-ai-coding-developers-2026/).
 
-If you find PegaProx useful, please consider giving it a star! ⭐
+Аудит безопасности с помощью ИИ стал отраслевой практикой: см. [Hacker News](https://thehackernews.com/2026/02/claude-opus-46-finds-500-high-severity.html), [IBM Research](https://www.ibm.com/think/insights/chatgpt-4-exploits-87-percent-one-day-vulnerabilities).
+
+Доработки этого форка написаны с помощью Claude Code.
+
+## ⭐ История звёзд
+
+Если PegaProx вам полезен, поставьте звезду оригинальному проекту! ⭐
 
 ---
 
 <p align="center">
-  Made with ❤️ by the PegaProx Team
+  Сделано с ❤️ командой PegaProx
 </p>
