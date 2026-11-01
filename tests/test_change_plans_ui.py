@@ -33,7 +33,7 @@ def test_every_key_the_view_uses_is_in_all_nine_languages():
     used.discard('chgBlocked')   # the stem of the two keys named above
     assert len(used) >= 45, sorted(used)
     for key in sorted(used):
-        assert len(re.findall(rf'^\s*{key}:', src, re.M)) == 9, key
+        assert len(re.findall(rf'^\s*{key}:', src, re.M)) == 10, key
 
 
 def test_the_new_text_has_no_dash():
