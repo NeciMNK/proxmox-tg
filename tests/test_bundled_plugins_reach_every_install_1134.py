@@ -381,13 +381,12 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
-raw=https://raw.githubusercontent.com/PegaProx/project-pegaprox/main/
+raw=https://raw.githubusercontent.com/NeciMNK/proxmox-tg/main/
 case "$url" in
-    https://github.com/PegaProx/project-pegaprox/archive/refs/heads/main.tar.gz|https://updates.pegaprox.com/archive/main.tar.gz)
+    https://github.com/NeciMNK/proxmox-tg/archive/refs/heads/main.tar.gz)
         src="$SRV/main.tar.gz" ;;
     https://api.github.com/*) src="$SRV/tree.json" ;;
     "$raw"*) src="$SRV/raw/${url#$raw}" ;;
-    https://updates.pegaprox.com/*) src="$SRV/raw/${url#https://updates.pegaprox.com/}" ;;
     *) exit 22 ;;
 esac
 [ -f "$src" ] || exit 22

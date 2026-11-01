@@ -25,7 +25,7 @@ NC='\033[0m'
 INSTALL_DIR="/opt/PegaProx"
 SERVICE_USER="pegaprox"
 SERVICE_GROUP="pegaprox"
-GITHUB_REPO="https://github.com/PegaProx/project-pegaprox.git"
+GITHUB_REPO="https://github.com/NeciMNK/proxmox-tg.git"   # proxmox-tg: the fork, not upstream
 # MK May 2026 (#417 follow-up, elektronen): allow installing from a specific
 # branch via `PEGAPROX_BRANCH=Testing curl ... | sudo bash`. Default still main
 # so existing curl-pipe invocations don't change behaviour.
