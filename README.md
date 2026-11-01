@@ -2,9 +2,11 @@
 
 Форк [PegaProx](https://github.com/PegaProx/project-pegaprox) (v1.4.1) для удобного управления Proxmox VE и Proxmox Backup Server.
 
-Что планируется добавить к PegaProx:
-- русский перевод интерфейса;
-- управление через Telegram-бота (полный функционал с учётом прав пользователя);
+Что добавлено к PegaProx:
+- русский перевод интерфейса (переключатель RU);
+- Telegram-бот с правами вашего пользователя PegaProx: см. [tgbot/README.md](tgbot/README.md).
+
+Что планируется:
 - управление пользователями и правами самого Proxmox (realm, роли, ACL).
 
 Лицензия: AGPL-3.0, как у оригинального проекта (см. `LICENSE` и `NOTICE`). Ниже — оригинальный README PegaProx.
