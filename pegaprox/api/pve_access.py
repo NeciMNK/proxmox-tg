@@ -62,9 +62,14 @@ def _pve(manager, method, path, data=None, params=None):
     resp = getattr(session, method)(_url(manager, path), data=data, params=params, timeout=15)
     if resp.status_code != 200:
         msg = parse_pve_error(resp.text, 'Proxmox refused the request')
-        if resp.status_code in (401, 403):
-            return None, upstream_failure(resp.status_code, msg)
-        return None, (jsonify({'error': msg}), 400 if resp.status_code in (400, 500) else 502)
+        # PVE answers a bad parameter or an id that exists with 400 or 500: the request's fault.
+        # 401/403 are the stored credentials (UPSTREAM_AUTH); anything else is a broken upstream.
+        code = resp.status_code
+        if code in (400, 500):
+            code = 400
+        elif code not in (401, 403):
+            code = 502
+        return None, upstream_failure(code, msg)
     try:
         return resp.json().get('data'), None
     except ValueError:
