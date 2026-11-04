@@ -151,3 +151,68 @@ class PegaProx:
 
     def ack_alert(self, cid, fired_id):
         return self.post(f'/api/clusters/{_q(cid)}/active-alerts/{_q(fired_id)}/ack')
+
+    # -- Proxmox VE users, groups, roles, permissions (proxmox-tg fork) --------
+    # PegaProx lets only its administrators (and tokens with the admin role) use these.
+    def _acc(self, cid, *parts):
+        return '/'.join([f'/api/clusters/{_q(cid)}/pve-access'] + [_q(p) for p in parts])
+
+    def pve_access(self, cid):
+        return self.get(self._acc(cid)) or {}
+
+    def create_pve_user(self, cid, fields):
+        return self.post(self._acc(cid, 'users'), fields)
+
+    def update_pve_user(self, cid, userid, fields):
+        return self.request('PUT', self._acc(cid, 'users', userid), json=fields)
+
+    def delete_pve_user(self, cid, userid):
+        return self.request('DELETE', self._acc(cid, 'users', userid))
+
+    def set_pve_password(self, cid, userid, password):
+        return self.request('PUT', self._acc(cid, 'users', userid, 'password'), json={'password': password})
+
+    def create_pve_group(self, cid, groupid, comment=''):
+        return self.post(self._acc(cid, 'groups'), {'groupid': groupid, 'comment': comment})
+
+    def delete_pve_group(self, cid, groupid):
+        return self.request('DELETE', self._acc(cid, 'groups', groupid))
+
+    def create_pve_role(self, cid, roleid, privs):
+        return self.post(self._acc(cid, 'roles'), {'roleid': roleid, 'privs': list(privs)})
+
+    def update_pve_role(self, cid, roleid, privs):
+        return self.request('PUT', self._acc(cid, 'roles', roleid), json={'privs': list(privs)})
+
+    def delete_pve_role(self, cid, roleid):
+        return self.request('DELETE', self._acc(cid, 'roles', roleid))
+
+    def set_pve_acl(self, cid, path, roles, users=(), groups=(), tokens=(), propagate=True, delete=False):
+        return self.request('PUT', self._acc(cid, 'acl'), json={
+            'path': path, 'roles': list(roles), 'users': list(users), 'groups': list(groups),
+            'tokens': list(tokens), 'propagate': bool(propagate), 'delete': bool(delete)})
+
+    # -- PegaProx's own users (needs the admin.users permission) ----------------
+    def panel_users(self):
+        data = self.get('/api/users')
+        return data if isinstance(data, list) else []
+
+    def panel_roles(self):
+        data = self.get('/api/roles')
+        return data if isinstance(data, list) else []
+
+    def create_panel_user(self, username, password, role, display_name='', email=''):
+        return self.post('/api/users', {'username': username, 'password': password, 'role': role,
+                                        'display_name': display_name or username, 'email': email})
+
+    def update_panel_user(self, username, fields):
+        return self.request('PUT', f'/api/users/{_q(username)}', json=fields)
+
+    def set_panel_password(self, username, password):
+        return self.request('PUT', f'/api/users/{_q(username)}/password', json={'password': password})
+
+    def reset_panel_2fa(self, username):
+        return self.request('DELETE', f'/api/users/{_q(username)}/2fa')
+
+    def delete_panel_user(self, username):
+        return self.request('DELETE', f'/api/users/{_q(username)}')
