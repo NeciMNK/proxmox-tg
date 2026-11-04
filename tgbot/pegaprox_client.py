@@ -191,3 +191,28 @@ class PegaProx:
         return self.request('PUT', self._acc(cid, 'acl'), json={
             'path': path, 'roles': list(roles), 'users': list(users), 'groups': list(groups),
             'tokens': list(tokens), 'propagate': bool(propagate), 'delete': bool(delete)})
+
+    # -- PegaProx's own users (needs the admin.users permission) ----------------
+    def panel_users(self):
+        data = self.get('/api/users')
+        return data if isinstance(data, list) else []
+
+    def panel_roles(self):
+        data = self.get('/api/roles')
+        return data if isinstance(data, list) else []
+
+    def create_panel_user(self, username, password, role, display_name='', email=''):
+        return self.post('/api/users', {'username': username, 'password': password, 'role': role,
+                                        'display_name': display_name or username, 'email': email})
+
+    def update_panel_user(self, username, fields):
+        return self.request('PUT', f'/api/users/{_q(username)}', json=fields)
+
+    def set_panel_password(self, username, password):
+        return self.request('PUT', f'/api/users/{_q(username)}/password', json={'password': password})
+
+    def reset_panel_2fa(self, username):
+        return self.request('DELETE', f'/api/users/{_q(username)}/2fa')
+
+    def delete_panel_user(self, username):
+        return self.request('DELETE', f'/api/users/{_q(username)}')

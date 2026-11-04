@@ -33,15 +33,12 @@ class PveUsersMixin:
         try:
             return self.api(uid).pve_access(cid)
         except ApiError as err:
-            kb = [[self.btn(uid, '« Назад', *(back or ('cluster', dict(cid=cid, cname=cname))))]] \
-                if back is None or isinstance(back[1], dict) else None
-            if back:
-                kb = [[self.btn(uid, '« Назад', back[0], **back[1])]]
-            else:
-                kb = [[self.btn(uid, '« Назад', 'cluster', cid=cid, cname=cname)]]
+            name, ctx = back or ('cluster', dict(cid=cid, cname=cname))
+            kb = [[self.btn(uid, '« Назад', name, **ctx)]]
             if err.status == 403:
-                return self.screen(chat, mid, f'⛔ {ADMIN_HINT}\n\n{v.e(err.message)}', kb) and None
-            self.error(chat, err, mid, kb)
+                self.screen(chat, mid, f'⛔ {ADMIN_HINT}\n\n{v.e(err.message)}', kb)
+            else:
+                self.error(chat, err, mid, kb)
             return None
 
     @staticmethod
@@ -59,19 +56,6 @@ class PveUsersMixin:
         return self.screen(chat, mid, text, kb)
 
     # ------------------------------------------------------------------ entry
-    def cmd_users(self, msg, uid, chat, arg):
-        try:
-            clusters = self.api(uid).clusters()
-        except ApiError as err:
-            return self.error(chat, err)
-        if not clusters:
-            return self.tg.send(chat, 'Нет доступных кластеров.')
-        if len(clusters) == 1:
-            c = clusters[0]
-            return self.cb_pve(uid, chat, None, cid=c['id'], cname=v.cluster_name(c))
-        kb = [[self.btn(uid, v.cluster_line(c), 'pve', cid=c['id'], cname=v.cluster_name(c))] for c in clusters]
-        return self.tg.send(chat, '<b>Пользователи Proxmox</b>: выберите кластер', kb)
-
     def cb_pve(self, uid, chat, mid, cid, cname):
         d = self._pve_load(uid, chat, mid, cid, cname)
         if d is None:

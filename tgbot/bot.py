@@ -17,6 +17,8 @@ from collections import OrderedDict
 
 from . import views as v
 from .pegaprox_client import ApiError, PegaProx
+from .panel_users import PanelUsersMixin
+from .pve_users import PveUsersMixin
 
 log = logging.getLogger('tgbot')
 
@@ -43,6 +45,7 @@ HELP = (
     "<b>Команды</b>\n"
     "/menu: главное меню (кластеры, ноды, VM и контейнеры)\n"
     "/find <i>текст</i>: найти VM/CT по имени или номеру\n"
+    "/users: пользователи PegaProx и Proxmox, группы, роли, права\n"
     "/alerts: активные оповещения\n"
     "/notify on|off: присылать новые оповещения\n"
     "/whoami: ваша роль и права\n"
@@ -51,7 +54,7 @@ HELP = (
 )
 
 COMMANDS = [
-    ('menu', 'Главное меню'), ('find', 'Найти VM/CT'), ('alerts', 'Активные оповещения'),
+    ('menu', 'Главное меню'), ('find', 'Найти VM/CT'), ('users', 'Пользователи и права'), ('alerts', 'Активные оповещения'),
     ('notify', 'Уведомления вкл/выкл'), ('whoami', 'Мои права'), ('login', 'Подключить аккаунт'),
     ('logout', 'Отвязать аккаунт'), ('api', 'Запрос к API'), ('help', 'Справка'),
 ]
@@ -78,7 +81,7 @@ class Callbacks:
             return self._items.get(key)
 
 
-class Bot:
+class Bot(PanelUsersMixin, PveUsersMixin):
     def __init__(self, cfg, tg, store, api_factory=None):
         self.cfg = cfg
         self.tg = tg
@@ -130,7 +133,9 @@ class Bot:
         text = msg['text'].strip()
         if not self.allowed(uid):
             return self.tg.send(chat, f'Доступ к боту закрыт. Ваш Telegram id: <code>{uid}</code>')
-        if text.startswith('/'):
+        # a Proxmox path (/vms/100) typed when the bot asked for one is an answer, not a command
+        if text.startswith('/') and not (self.pending.get(uid, {}).get('kind') == 'pve_acl_path'
+                                         and not hasattr(self, 'cmd_' + text[1:].split(' ', 1)[0].lower())):
             cmd, _, arg = text.partition(' ')
             cmd = cmd[1:].split('@', 1)[0].lower()
             arg = arg.strip()
@@ -234,6 +239,10 @@ class Bot:
 
     def on_input(self, msg, uid, chat, text, pend):
         kind = pend['kind']
+        if kind.startswith('pve_'):
+            return self.pve_input(msg, uid, chat, text, pend)
+        if kind.startswith('pp_'):
+            return self.pp_input(msg, uid, chat, text, pend)
         if kind == 'find':
             return self.find(uid, chat, text)
         if kind == 'snapname':
@@ -304,6 +313,7 @@ class Bot:
             return self.screen(chat, mid, 'Нет доступных кластеров.', None)
         kb = [[self.btn(uid, v.cluster_line(c), 'cluster', cid=c['id'], cname=v.cluster_name(c))] for c in clusters]
         kb.append([self.btn(uid, '🔔 Оповещения', 'all_alerts'), self.btn(uid, '🔍 Поиск', 'ask_find')])
+        kb.append([self.btn(uid, '👥 Пользователи', 'users')])
         return self.screen(chat, mid, '<b>Кластеры</b>', kb)
 
     def cb_clusters(self, uid, chat, mid):
@@ -329,6 +339,7 @@ class Bot:
             [self.btn(uid, '🖥 Ноды', 'nodes', **c), self.btn(uid, '📦 VM и CT', 'guests', page=0, **c)],
             [self.btn(uid, '📋 Задачи', 'tasks', **c), self.btn(uid, '🔔 Оповещения', 'alerts', **c)],
             [self.btn(uid, '🛡 Firewall', 'fw', **c), self.btn(uid, '💽 Хранилища', 'storage', **c)],
+            [self.btn(uid, '👤 Пользователи Proxmox', 'pve', **c)],
             [self.btn(uid, '🔄 Обновить', 'cluster', **c), self.btn(uid, '« Кластеры', 'clusters')],
         ]
         return self.screen(chat, mid, '\n'.join(lines), kb)
